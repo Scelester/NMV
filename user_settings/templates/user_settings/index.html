@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<style>
+    .settings-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    section {
+        margin-bottom: 30px;
+    }
+    
+    h3 {
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+    
+    .alert-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .alert-setting {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+    
+    .input-group input[type="number"] {
+        width: 100px;
+        padding: 5px;
+        margin-right: 5px;
+    }
+    
+    .unit {
+        font-size: 14px;
+        color: #666;
+        margin-left: 5px;
+    }
+    
+    .toggle-btns {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .toggle-btn {
+        background-color: transparent;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px;
+    }
+    
+    .toggle-btn.selected {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 4px;
+    }
+    
+    .toggle-btn:focus {
+        outline: none;
+    }
+    
+    button[type="submit"] {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="settings-page">
+    <h2>Settings</h2>
+
+    <!-- Change Username -->
+    <section>
+        <h3>Change Username</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            <button type="submit" name="username_change">Update Username</button>
+        </form>
+    </section>
+
+    <!-- Change Password -->
+    <section>
+        <h3>Change Password</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit" name="password_change">Change Password</button>
+        </form>
+    </section>
+
+    <!-- IP Settings -->
+    <section>
+        <h3>IP Settings</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ ipsetform.as_p }}
+            <button type="submit" name="ip_settings_change">Update IP Settings</button>
+        </form>
+    </section>
+
+    <!-- Alert Settings -->
+    <section style="padding:20px">
+        <h2>Alert Settings</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="alert-settings">
+                {% for field in alert_form %}
+                    {% if field.name|slice:"-13:" == "_notification" %}
+                        <div class="alert-setting">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <div class="toggle-btns">
+                                <button type="button" class="toggle-btn {% if field.value|stringformat:"s" == "True" %}selected{% endif %}" 
+                                        onclick="toggleAlertSetting(this, true)" data-input-id="{{ field.id_for_label }}" data-state="true">✅</button>
+                                <button type="button" class="toggle-btn {% if field.value|stringformat:"s" == "False" or not field.value %}selected{% endif %}" 
+                                        onclick="toggleAlertSetting(this, false)" data-input-id="{{ field.id_for_label }}" data-state="false">❌</button>
+                            </div>
+                            <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|stringformat:"s" }}">
+                        </div>
+                        <hr style="border:2px solid black; width:100%" />
+                    {% else %}
+                        <div class="alert-setting">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <div class="input-group">
+                                <input type="number" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value }}" min="0">
+                                <span class="unit">
+                                    {% if field.name == "cpu_load_threshold" or field.name == "memory_percent_threshold" or field.name == "device_availability_packet_loss_threshold" %}
+                                        %
+                                    {% elif field.name == "memory_used_threshold" %}
+                                        GB
+                                    {% elif field.name == "network_traffic_sent_threshold" or field.name == "network_traffic_received_threshold" %}
+                                        GB
+                                    {% elif field.name == "device_availability_ping_time_threshold" %}
+                                        ms
+                                    {% elif field.name == "connected_device_count_threshold" %}
+                                        devices
+                                    {% else %}
+                                        <!-- Default Unit or Empty if none -->
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button type="submit" name="alert_settings_change">Save Alert Settings</button>
+        </form>
+    </section>
+</div>
+
+<script>
+function toggleAlertSetting(button, state) {
+    const hiddenInput = document.getElementById(button.getAttribute('data-input-id'));
+    hiddenInput.value = state ? 'true' : 'false';
+
+    const buttons = button.parentElement.querySelectorAll('.toggle-btn');
+    buttons.forEach(btn => btn.classList.remove('selected'));
+
+    button.classList.add('selected');
+}
+</script>
+
+{% endblock %}

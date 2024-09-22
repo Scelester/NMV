@@ -1,0 +1,132 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>System Usage History</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 80vh;
+        width: 80vw;
+        margin: auto;
+    }
+    canvas {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h1>System Usage History</h1>
+<div class="chart-container">
+    <canvas id="systemUsageChart"></canvas>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('systemUsageChart').getContext('2d');
+
+        // Data from Django
+        const timestamps = JSON.parse('{{ timestamps|escapejs }}');
+        const cpuLoads = JSON.parse('{{ cpu_loads|escapejs }}');
+        const memoryUsed = JSON.parse('{{ memory_used|escapejs }}');
+        const memoryPercent = JSON.parse('{{ memory_percent|escapejs }}');
+
+        // Preprocess data to filter out empty values
+        const preprocessData = (timestamps, data) => {
+            return timestamps
+                .map((timestamp, index) => ({
+                    x: new Date(timestamp), // Convert to Date object
+                    y: data[index]
+                }))
+                .filter(point => point.y !== null && !isNaN(point.y)); // Remove null and NaN values
+        };
+
+        const formattedCpuData = preprocessData(timestamps, cpuLoads);
+        const formattedMemoryUsedData = preprocessData(timestamps, memoryUsed);
+        const formattedMemoryPercentData = preprocessData(timestamps, memoryPercent);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'CPU Load (%)',
+                        data: formattedCpuData,
+                        borderColor: '#FF5733',
+                        backgroundColor: 'rgba(255, 87, 51, 0.2)',
+                        fill: true,
+                        spanGaps: false // Do not connect gaps
+                    },
+                    {
+                        label: 'Memory Used (GB)',
+                        data: formattedMemoryUsedData,
+                        borderColor: '#33C1FF',
+                        backgroundColor: 'rgba(51, 193, 255, 0.2)',
+                        fill: true,
+                        spanGaps: false // Do not connect gaps
+                    },
+                    {
+                        label: 'Memory Usage (%)',
+                        data: formattedMemoryPercentData,
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                        fill: true,
+                        spanGaps: false // Do not connect gaps
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute',
+                            tooltipFormat: 'MMM d, yyyy HH:mm',
+                            displayFormats: {
+                                minute: 'MMM d, yyyy HH:mm',
+                                hour: 'MMM d, yyyy HH:mm'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Timestamp'
+                        },
+                        ticks: {
+                            maxRotation: 45, // Rotate x-axis labels for better fit
+                            autoSkip: true // Automatically skip labels if they overlap
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Metrics'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw.y}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock script %}

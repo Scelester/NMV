@@ -1,0 +1,564 @@
+/* dashboard_style.css */
+.dashboard {
+  padding: 20px;
+}
+
+h2 {
+  margin:auto
+}
+
+p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+span {
+  font-weight: bold;
+}
+
+.Online {
+  color: green;
+  font-weight: bold;
+}
+
+.Offline {
+  color: red;
+  font-weight: bold;
+}
+
+/* Styles for the traceroute section */
+#traceroute {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-top: 1rem;
+  position: relative; /* Position relative for spinner positioning */
+}
+
+#traceroute h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#traceroute p {
+  margin-bottom: 1rem;
+}
+
+#tracerouteList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Two columns */
+  gap: 1rem; /* Space between columns */
+}
+
+.hop {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.hop:last-child {
+  border-bottom: none;
+}
+
+.hop-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hop-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+}
+
+.hop-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  font-size: 0.9rem; /* Make text smaller */
+}
+
+.hop-details strong {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.latency {
+  display: inline-block;
+  padding: 0.1rem 0.3rem;
+  margin-right: 0.5rem;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  color: #333; /* Default color */
+}
+
+/* Color code the latencies */
+.latency:nth-child(1) {
+  color: #4caf50; /* Green */
+}
+
+.latency:nth-child(2) {
+  color: #ff9800; /* Orange */
+}
+
+.latency:nth-child(3) {
+  color: #f44336; /* Red */
+}
+
+/* Spinner styles */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1); /* Light gray background */
+  border-left: 4px solid #3498db; /* Blue spinner */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  position: absolute; /* Position absolutely within #traceroute */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 1s linear infinite;
+  display: none; /* Initially hidden */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Styles for the fading dots */
+.dots-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #3498db; /* Blue color */
+  border-radius: 50%;
+  margin: 0 5px;
+  animation: fade 1.5s infinite;
+}
+
+.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes fade {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Network Monitoring Layout */
+.network-monitoring-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Spacing between sections */
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  padding: 20px;
+}
+
+/* Styling for connected devices section */
+.networkDeviceContainer {
+  flex: 1;
+  min-width: 300px; /* Minimum width for readability */
+  max-width: 48%; /* Width to fit within the container */
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Styling for device status section */
+.pingStatusContainer {
+  flex: 1;
+  min-width: 300px; /* Minimum width for readability */
+  max-width: 48%; /* Width to fit within the container */
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Heading styling for both sections */
+.networkDeviceContainer h2, .pingStatusContainer h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Button styling for refresh devices */
+#refreshDevices {
+  display: block;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#refreshDevices:hover {
+  background-color: #0056b3;
+}
+
+/* Fading dots container styling */
+.dots-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+/* Dots styling */
+.dots-container .dot {
+  height: 12px;
+  width: 12px;
+  background-color: #007bff;
+  border-radius: 50%;
+  margin: 0 5px;
+  animation: dot-blink 1.5s infinite;
+}
+
+/* Dot blinking animation */
+@keyframes dot-blink {
+  0%, 50%, 100% {
+      opacity: 1;
+  }
+  25%, 75% {
+      opacity: 0.3;
+  }
+}
+
+/* List styling for both devices and status */
+.networkDeviceContainer ol, .pingStatusContainer ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* List item styling for devices and status */
+.networkDeviceContainer li, .pingStatusContainer li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Alternate row styling for better readability */
+.networkDeviceContainer li:nth-child(even), .pingStatusContainer li:nth-child(even) {
+  background: #e9ecef;
+}
+
+/* Highlight online status */
+.pingStatusContainer li span.online {
+  color: #28a745; /* Green for online */
+}
+
+/* Highlight offline status */
+.pingStatusContainer li span.offline {
+  color: #dc3545; /* Red for offline */
+}
+
+/* Highlight packet loss and ping time */
+.pingStatusContainer li .packet-loss,
+.pingStatusContainer li .ping-time {
+  font-weight: bold;
+}
+
+
+/* Device container styling */
+.device-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between image and text */
+  padding: 10px; /* Padding inside the list item */
+  border-bottom: 1px solid #ddd; /* Border for separation */
+  overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+/* Device image styling */
+.device-image {
+  width: 40px; /* Smaller width for device images */
+  height: 40px; /* Smaller height for device images */
+  border-radius: 50%; /* Circular image */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+}
+
+/* Device text styling */
+.device-text {
+  font-size: 14px; /* Smaller font size for text */
+  color: #333;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflowed text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+}
+
+/* List item styling */
+#devicesList li {
+  padding: 5px; /* Reduced padding for less height */
+  background: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 5px; /* Reduced margin for less spacing between items */
+}
+/* List container styling */
+#devicesList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid; /* Use CSS Grid for layout */
+  grid-template-columns: repeat(2, 1fr); /* Two equal-width columns */
+  gap: 10px; /* Space between items */
+}
+
+/* List item styling */
+#devicesList li {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between image and text */
+  padding: 10px;
+  border: 1px solid #ddd; /* Border for separation */
+  background: #f9f9f9;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Device container styling */
+.device-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between image and text */
+  overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+/* Device image styling */
+.device-image {
+  width: 40px; /* Width of device image */
+  height: 40px; /* Height of device image */
+  border-radius: 50%; /* Circular image */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+}
+
+/* Device text styling */
+.device-text {
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflowed text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+}
+
+
+/* Container for network usage */
+#networkUsage {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+#networkUsage h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* List styling */
+#networkUsageList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* List item styling */
+#networkUsageList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hover effects for list items */
+#networkUsageList li:hover {
+  background: #e9ecef;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* IP styling */
+#networkUsageList li .ip {
+  font-weight: bold;
+  color: #007bff; /* Blue for IP */
+}
+
+/* Data usage styling */
+#networkUsageList li .usage {
+  font-weight: bold;
+  color: #28a745; /* Green for data usage */
+}
+
+
+/* Container for both sections */
+.data-usage-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping of sections on smaller screens */
+  gap: 20px; /* Space between the sections */
+  justify-content: space-between; /* Distributes space evenly */
+}
+
+/* Container for network usage section */
+#networkUsage {
+  flex: 1;
+  min-width: 300px; /* Minimum width for responsiveness */
+  max-width: 48%; /* Adjust width to fit side by side */
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Container for app usage section */
+#appUsage {
+  flex: 1;
+  min-width: 300px; /* Minimum width for responsiveness */
+  max-width: 48%; /* Adjust width to fit side by side */
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* List styling for network usage and app usage */
+#networkUsageList,
+#appUsageList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* List item styling */
+#networkUsageList li,
+#appUsageList li {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hover effects for list items */
+#networkUsageList li:hover,
+#appUsageList li:hover {
+  background: #e9ecef;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Container for IP and data usage */
+.ip-info,
+.app-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* IP or app name styling */
+.ip-name,
+.app-name {
+  font-weight: bold;
+  color: #007bff; /* Blue for names */
+}
+
+/* Data usage styling */
+.data-usage {
+  font-weight: bold;
+  color: #28a745; /* Green for data usage */
+}
+
+
+
+/* system usuage */
+.bandwidth-and-gauges {
+  display: flex;
+  justify-content: space-between; /* Adjusts spacing between items */
+  align-items: flex-start; /* Aligns items at the top */
+  gap: 20px; /* Space between bandwidth and gauges */
+}
+
+.bandwidth-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.gauges-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gauge-wrapper {
+  text-align: center;
+}
+
+.gauge-container {
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}

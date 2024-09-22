@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>App Usage History</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .app-usage-table-container {
+        width: 100%;
+        max-width: 1000px;  /* Max width for the table container */
+        margin: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow-x: auto; /* Enable horizontal scrolling if needed */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .app-usage-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 12px; /* Further reduce font size */
+    }
+    .app-usage-table th, .app-usage-table td {
+        padding: 4px 6px;  /* Further reduce padding */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+        max-width: 120px; /* Set max-width to control column width */
+    }
+    .app-usage-table th {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+    }
+    .app-usage-table tr:nth-child(even) {
+        background-color: #f9f9f9;  /* Lighter color for even rows */
+    }
+    .app-usage-table tr:hover {
+        background-color: #f1f1f1;  /* Highlight color on hover */
+    }
+    .header-title {
+        background-color: #4CAF50;
+        color: white;
+        padding: 6px;  /* Reduced padding for header */
+        text-align: center;
+        font-size: 16px;  /* Further reduced font size */
+        font-weight: bold;
+        border-radius: 8px 8px 0 0;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="app-usage-table-container">
+    <div class="header-title">App Usage History</div>
+    <table class="app-usage-table">
+        <thead>
+            <tr>
+                <th>App Name</th>
+                <th>App ID</th>
+                <th>Local Address</th>
+                <th>Remote Address</th>
+                <th>Status</th>
+                <th>Connections</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in apps %}
+            <tr>
+                <td>{{ app.app_name }}</td>
+                <td>{{ app.app_id }}</td>
+                <td>{{ app.local_address }}</td>
+                <td>{{ app.remote_address }}</td>
+                <td>{{ app.status }}</td>
+                <td>{{ app.latest_connections }}</td>
+                <td>{{ app.latest_timestamp|date:"M d, Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

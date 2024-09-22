@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>{{ model_name }} History</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 80vh; /* 80% of viewport height */
+        width: 80vw;  /* 80% of viewport width */
+        margin: auto;
+    }
+    canvas {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h1>{{ model_name }} History</h1>
+<div class="chart-container">
+    <canvas id="networkTrafficChart"></canvas>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('networkTrafficChart').getContext('2d');
+
+        // Fetch data from Django context
+        const labels = {{ labels|safe }};
+        const sentBytes = {{ data_points.Sent_Bytes|safe }};
+        const receivedBytes = {{ data_points.Received_Bytes|safe }};
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Sent Bytes (MB)',
+                        data: sentBytes,
+                        borderColor: '#FF5733',
+                        backgroundColor: 'rgba(255, 87, 51, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Received Bytes (MB)',
+                        data: receivedBytes,
+                        borderColor: '#33C1FF',
+                        backgroundColor: 'rgba(51, 193, 255, 0.2)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'hour', // Change this to 'day' for daily aggregation
+                            tooltipFormat: 'Pp', // 'Pp' is the format for date and time
+                            displayFormats: {
+                                hour: 'MMM d, yyyy HH:mm', // Corrected format
+                                day: 'MMM d, yyyy'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Timestamp'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'MB'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock script %}

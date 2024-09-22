@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'home/css/dashboard_style.css' %}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/justgage@1.4.0/justgage.min.js"></script>
+
+{% endblock %}
+  
+{% block content %}
+  <div class="dashboard">
+    <div class="bandwidth-and-gauges">
+      <div class="bandwidth-container">
+        <h2>Bandwidth Usage</h2>
+        <p>Data Sent: <span id="bytesSent">...</span></p>
+        <p>Data Received: <span id="bytesRecv">...</span></p>
+        <canvas id="bandwidthChart" width="800" style="display: block; box-sizing: border-box;"></canvas>
+      </div>
+  
+      <div class="gauges-container">
+        <div class="gauge-wrapper">
+          <h3>CPU Load</h3>
+          <div id="cpuGauge" class="gauge-container"></div>
+        </div>
+        
+        <div class="gauge-wrapper">
+          <h3>Memory Usage</h3>
+          <div id="memoryGauge" class="gauge-container"></div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="network-monitoring-container">
+      <div class="networkDeviceContainer" id="connectedDevices">
+          <h2>Connected Devices</h2>
+          <button id="refreshDevices">Refresh Devices</button>
+          <div id="dotsContainer" class="dots-container">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+          </div>
+          <ol id="devicesList"></ol>
+      </div>
+  
+      <div class="pingStatusContainer" id="deviceStatus">
+          <h2>Ping</h2>
+          <ul id="statusList"></ul>
+      </div>
+  </div>
+  
+
+  <div class="data-usage-container">
+    <div id="networkUsage">
+      <h2>IP address you are connected to</h2>
+      <ul id="networkUsageList"></ul>
+    </div>
+  
+    <div id="appUsage">
+      <h2>Appications using the network</h2>
+      <ul id="appUsageList"></ul>
+    </div>
+  </div>
+  
+    
+  <div id="traceroute">
+    <h2>Traceroute</h2>
+    <p style="text-align:right;">
+      <input type="text" id="tracerouteHost" hidden="true" value="google.com" />
+      <button onclick="updateTraceroute()" >Re-trace</button>
+    </p>
+    <div id="spinner" class="spinner"></div> <!-- Loading spinner -->
+    <ul id="tracerouteList"></ul>
+  </div>
+
+
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'home/js/services/bandwidth.js' %}"></script>
+  <script src="{% static 'home/js/services/connectedDevice.js' %}"></script>
+  <script src="{% static 'home/js/services/networkUsageByApp.js' %}"></script>
+  <script src="{% static 'home/js/services/networkUsageByIp.js' %}"></script>
+  <script src="{% static 'home/js/services/pingTest.js' %}"></script>
+  <script src="{% static 'home/js/services/traceroute.js' %}"></script>
+  <script src="{% static 'home/js/services/systemUsuage.js' %}"></script>
+  <script src="{% static 'home/js/services/notification.js' %}"></script>
+  <script>
+    setInterval(() => {
+      updateNetworkTraffic()
+      updateDeviceStatus()
+      updateNetworkUsage()
+      updateAppUsage()
+      // updateTraceroute()
+    }, 5000)
+    
+    // Initial update calls
+    updateNetworkTraffic()
+    updateDeviceStatus()
+    updateNetworkUsage()
+    updateAppUsage()
+    updateTraceroute() // Call this initially to display traceroute results
+  </script>
+{% endblock %}

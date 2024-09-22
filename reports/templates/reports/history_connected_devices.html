@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Connected Devices</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .device-table-container {
+        width: 100%;
+        max-width: 800px; /* Set a maximum width for the table container */
+        margin: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow-x: auto; /* Enable horizontal scrolling if needed */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .device-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Arial', sans-serif;
+        font-size: 12px; /* Reduced font size */
+    }
+    .device-table th, .device-table td {
+        padding: 6px 8px; /* Reduced padding */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflow */
+        text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+        max-width: 150px; /* Set max-width to control column width */
+    }
+    .device-table th {
+        background-color: #0066cc;
+        color: white;
+        font-weight: bold;
+    }
+    .device-table tr:nth-child(even) {
+        background-color: #f9f9f9; /* Lighter color for even rows */
+    }
+    .device-table tr:hover {
+        background-color: #e0e0e0; /* Highlight color on hover */
+    }
+    .device-count, .latest-timestamp {
+        font-size: 11px; /* Further reduced font size for smaller text elements */
+        color: #333;
+    }
+    .table-header {
+        background-color: #0066cc;
+        color: white;
+        padding: 8px; /* Reduced padding for header */
+        text-align: center;
+        font-size: 16px; /* Reduced font size for header */
+        font-weight: bold;
+        border-radius: 8px 8px 0 0;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="device-table-container">
+    <div class="table-header">Connected Devices</div>
+    <table class="device-table">
+        <thead>
+            <tr>
+                <th>IP Address</th>
+                <th>Number of Occurrences</th>
+                <th>Latest Connection</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td>{{ device.ip_address }}</td>
+                <td class="device-count">{{ device.count }}</td>
+                <td class="latest-timestamp">{{ device.latest_timestamp|date:"M d, Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

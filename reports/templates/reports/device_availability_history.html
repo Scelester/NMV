@@ -1,0 +1,155 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>Device Availability History</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 40vh; /* Adjust height for side-by-side display */
+        width: 48vw;  /* Adjust width for side-by-side display */
+        margin: auto;
+        display: inline-block; /* Ensure side-by-side display */
+        vertical-align: top; /* Align top for side-by-side charts */
+    }
+    .device-charts {
+        margin-top:50px;
+        text-align: center; /* Center the charts */
+        margin-bottom: 30px;
+    }
+    hr{
+        margin-top:70px;
+    }
+    canvas {
+        height: 100%;
+        width: 100%;
+    }
+    .chart-title {
+        margin-bottom: 15px; /* Spacing between chart title and chart */
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h1>Device Availability History</h1>
+{% for device in devices %}
+    <div class="device-charts">
+        <h2>{{ device }}</h2>
+        <div class="chart-container">
+            <h3 class="chart-title">Packet Loss</h3>
+            <canvas id="packetLossChart-{{ forloop.counter }}"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3 class="chart-title">Ping Time</h3>
+            <canvas id="pingTimeChart-{{ forloop.counter }}"></canvas>
+        </div>
+    </div>
+    <hr>
+{% endfor %}
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const packetLossData = {{ packet_loss_data|safe }};
+        const pingTimeData = {{ ping_time_data|safe }};
+
+        Object.keys(packetLossData).forEach((device, index) => {
+            const packetLossCtx = document.getElementById(`packetLossChart-${index + 1}`).getContext('2d');
+            const pingTimeCtx = document.getElementById(`pingTimeChart-${index + 1}`).getContext('2d');
+
+            // Packet Loss Chart
+            if (packetLossData[device].timestamps.length > 0) {
+                new Chart(packetLossCtx, {
+                    type: 'line',
+                    data: {
+                        labels: packetLossData[device].timestamps,
+                        datasets: [{
+                            label: 'Packet Loss (%)',
+                            data: packetLossData[device].packet_loss,
+                            borderColor: '#FF5733',
+                            backgroundColor: 'rgba(255, 87, 51, 0.2)',
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'hour',
+                                    tooltipFormat: 'Pp',
+                                    displayFormats: {
+                                        hour: 'MMM d, yyyy HH:mm',
+                                        day: 'MMM d, yyyy'
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Timestamp'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Packet Loss (%)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Ping Time Chart
+            if (pingTimeData[device].timestamps.length > 0) {
+                new Chart(pingTimeCtx, {
+                    type: 'line',
+                    data: {
+                        labels: pingTimeData[device].timestamps,
+                        datasets: [{
+                            label: 'Ping Time (ms)',
+                            data: pingTimeData[device].ping_time,
+                            borderColor: '#33C1FF',
+                            backgroundColor: 'rgba(51, 193, 255, 0.2)',
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'hour',
+                                    tooltipFormat: 'Pp',
+                                    displayFormats: {
+                                        hour: 'MMM d, yyyy HH:mm',
+                                        day: 'MMM d, yyyy'
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Timestamp'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Ping Time (ms)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock script %}

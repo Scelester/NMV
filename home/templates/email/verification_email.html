@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Your Email</title>
+</head>
+<body>
+    <p>Hello {{ user.username }},</p>
+    <p>Please click the following link to verify your email address:</p>
+    <p><a href="http://{{ protocol }}://{{ domain }}/verify-email/?token={{ token }}">Verify your email</a></p>
+    <p>Thank you!</p>
+</body>
+</html>

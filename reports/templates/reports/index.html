@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>History Overview</title>
+{% endblock title %}
+
+{% block styles %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif; /* Use a clean, modern font */
+        background-color: #f4f4f4; /* Light background color */
+    }
+    .overview-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 20px;
+    }
+    .overview-item {
+        margin: 15px;
+        padding: 30px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 300px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: center;
+        cursor: pointer;
+    }
+    .overview-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        background-color:#E0FFFF;
+    }
+    .overview-item a {
+        text-decoration: none;
+        color: #333;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .overview-item a:hover {
+        color: #007bff;
+    }
+    .overview-item h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .overview-item p {
+        font-size: 16px;
+        color: #666;
+        margin-top: 0;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 30px;">History Overview</h1>
+<div class="overview-container">
+    <div class="overview-item">
+        <a href="{% url 'history_networktraffic' %}">
+            <h2>📶 Bandwith History</h2>
+            <p>View historical data on network traffic.</p>
+        </a>
+    </div>
+    <div class="overview-item">
+        <a href="{% url 'history_deviceavailability' %}">
+            <h2>📦Ping and Packet Loss</h2>
+            <p>View historical data on your Ping test.</p>
+        </a>
+    </div>
+    <div class="overview-item">
+        <a href="{% url 'history_connecteddevice' %}">
+            <h2>📱Connected Devices </h2>
+            <p>History of connected devices.</p>
+        </a>
+    </div>
+    <div class="overview-item">
+        <a href="{% url 'history_appusage' %}">
+            <h2>🧩App Usage History</h2>
+            <p>View historical data on app usage.</p>
+        </a>
+    </div>
+    <div class="overview-item">
+        <a href="{% url 'history_systemusage' %}">
+            <h2>⚡System Usage History</h2>
+            <p>View historical data on system usage.</p>
+        </a>
+    </div>
+</div>
+{% endblock content %}

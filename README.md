@@ -1,6 +1,12 @@
 # NMV
 Netowork Manager Made in Django 
 
+
+The application is optimized for windows (mainly tracert) but can be usable in linux if tweaked the home/utils/traceroute.py to use traceroute. 
+
+
+Also you need to install nmap Version: 7
+
 ScreenShots:
 ![image](https://github.com/user-attachments/assets/617a1e4c-42b9-4df2-a54a-3200f354b643)
 
